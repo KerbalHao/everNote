@@ -4,12 +4,12 @@
  * @FilePath: \ever-note\vue.config.js
  */
 module.exports = {
-  devServer: {
-    proxy: {
-      '/': {
-        target: 'http://127.0.0.1:8081',
-        changeOrigin: true
-      }
-    }
-  }
+  // devServer: {
+  //   proxy: {
+  //     '/': {
+  //       target: 'http://127.0.0.1:8081',
+  //       changeOrigin: true
+  //     }
+  //   }
+  // }
 }

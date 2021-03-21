@@ -51,7 +51,6 @@ export default {
           reject(err)
         })
     })
-    //return request(URL.ADD.replace(':notebookId', notebookId), 'POST', { title, content })
   }
 
 }

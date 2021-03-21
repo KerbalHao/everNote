@@ -1,3 +1,8 @@
+/*
+ * @Date: 2021-03-20 30:49:08
+ * @LastEditors: KerbalHao
+ * @FilePath: \ever-note\src\apis\auth.js
+ */
 import request from '@/helpers/request'
 
 const URL = {

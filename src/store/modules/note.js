@@ -1,3 +1,8 @@
+/*
+ * @Date: 2021-03-21 17:21:02
+ * @LastEditors: KerbalHao
+ * @FilePath: \ever-note\src\store\modules\note.js
+ */
 import Note from "@/apis/notes";
 import { Message } from "element-ui";
 
@@ -11,9 +16,9 @@ const getters = {
 
   // 根据State 属性惰性获取当前笔记
   curNote: (state) => {
-    if (!Array.isArray(state.notes)) return {};
-    if (!state.curNoteId) return state.notes[0] || {};
-    return state.notes.find((note) => note.id == state.curNoteId) || {};
+    if (!Array.isArray(state.notes)) return { title: "", content: "" };
+    if (!state.curNoteId) return state.notes[0] || { title: "", content: "" };
+    return state.notes.find((note) => note.id == state.curNoteId) || {title: '', content: ''};
   }
 };
 
@@ -35,6 +40,7 @@ const mutations = {
   deleteNote(state, payload) {
     state.notes = state.notes.filter((note) => note.id !== payload.noteId);
   },
+
   // 设置当前笔记ID
   setCurNote(state, payload) {
     state.curNoteId = payload.curNoteId;

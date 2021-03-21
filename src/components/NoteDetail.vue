@@ -6,7 +6,8 @@
       :curNote="curNote"
     ></NoteSidebar>
     <div class="note-detail">
-      <div class="note-empty" v-show="!curNote.id">请选择笔记</div>
+      <div class="note-empty" v-show="!curBook.id">请创建笔记本后</div>
+      <div class="note-empty" v-show="!curNote.id">选择或创建笔记</div>
       <div class="note-detail-ct" v-show="curNote.id">
         <div class="note-bar">
           <span> 创建日期: {{ curNote.createdAtFriendly }}</span>
@@ -28,20 +29,20 @@
           />
         </div>
         <div class="editor">
-          <!-- <codemirror
+          <codemirror
             v-model="curNote.content"
             :options="cmOptions"
             v-show="!isShowPreview"
             @input="ononUpdateNote"
             @inputRead="statusText = '正在输入...'"
-          ></codemirror> -->
-          <textarea
+          ></codemirror>
+          <!-- <textarea
             v-show="isShowPreview"
             v-model="curNote.content"
             @input="onUpdateNote"
             @keydown="statusText = '正在输入...'"
             placeholder="输入内容, 支持 markdown 语法"
-          ></textarea>
+          ></textarea> -->
           <div
             class="preview markdown-body"
             v-html="previewContent"
@@ -58,19 +59,31 @@ import NoteSidebar from "./NoteSidebar";
 import _ from "lodash";
 import MarkdownIt from "markdown-it";
 import { mapGetters, mapMutations, mapActions } from "vuex";
+import { codemirror } from "vue-codemirror";
+import "codemirror/lib/codemirror.css";
+import "codemirror/mode/markdown/markdown.js";
+import "codemirror/theme/neat.css";
+
 let md = new MarkdownIt();
 
 export default {
   name: "NoteDetail",
-  components: { NoteSidebar },
+  components: { NoteSidebar, codemirror },
   data() {
     return {
       isShowPreview: false,
-      statusText: "笔记未改动"
+      statusText: "笔记未改动",
+      cmOptions: {
+        tabSize: 4,
+        mode: "text/x-markdown",
+        theme: "neat",
+        lineNumbers: false,
+        line: true
+      }
     };
   },
   computed: {
-    ...mapGetters(["notes", "curNote"]),
+    ...mapGetters(["notes", "curNote", "curBook"]),
 
     // 设置 md 预览内容
     // md.render 返回 md 解析的 html 格式字符串

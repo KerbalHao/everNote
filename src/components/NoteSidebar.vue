@@ -6,7 +6,9 @@
 <template>
   <div class="note-sidebar">
     <span class="btn add-note" @click="onAddNote">添加笔记</span>
+    <span v-if="!curBook.id" class="notebook-title">无笔记本</span>
     <el-dropdown
+      v-if="curBook.id"
       class="notebook-title"
       @command="handleCommand"
       placement="bottom"
@@ -31,7 +33,7 @@
     </div>
     <ul class="notes">
       <li v-for="note in notes" :key="note.id">
-        <router-link :to="`/note?noteId=${note.id}&$notebook=${curBook.id}`">
+        <router-link :to="`/note?noteId=${note.id}&notebook=${curBook.id}`">
           <span class="date">{{ note.updatedAtFriendly }}</span>
           <span class="title">{{ note.title }}</span></router-link
         >
@@ -49,7 +51,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters(["notebooks", "notes", "curBook"])
+    ...mapGetters(["notebooks", "notes", "curBook", "curNote"])
   },
   created() {
     // 进入获取当前所有笔记本
@@ -57,12 +59,22 @@ export default {
       .then(() => {
         // 设置当前笔记本ID
         this.setCurBook({ curBookId: this.$route.query.notebookId });
-        // 获取当前笔记本的所有笔记
-        return this.getNotes({ notebookId: this.curBook.id });
+        // 若有选中笔记本，获取当前笔记本的所有笔记
+        if (this.curBook.id) {
+          return this.getNotes({ notebookId: this.curBook.id });
+        }
       })
       .then(() => {
         // 设置当前笔记Id,getter 中会根据id 获取笔记
         this.setCurNote({ curNoteId: this.$route.query.noteId });
+        // 使 url 统一化
+        this.$router.replace({
+          path: "/note",
+          query: {
+            noteId: this.curNote.id,
+            notebookId: this.curBook.id
+          }
+        });
       });
   },
   methods: {
@@ -78,7 +90,17 @@ export default {
       // 设置当前笔记id
       this.setCurBook({ curBookId: notebookId });
       // 根据当前笔记Id 获取笔记
-      this.getNotes({ notebookId });
+      this.getNotes({ notebookId }).then(() => {
+        // 使 url 统一化
+        this.setCurNote();
+        this.$router.replace({
+          path: "/note",
+          query: {
+            noteId: this.curNote.id,
+            notebookId: this.curBook.id
+          }
+        });
+      });
     },
 
     // 添加笔记

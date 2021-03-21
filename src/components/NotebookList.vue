@@ -35,7 +35,6 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 
-
 export default {
   data() {
     return {
@@ -48,7 +47,7 @@ export default {
   created() {
     // 校验登录状态
     // 未登录直接跳转登陆界面
-     this.checkLogin({ path: '/login' })
+    this.checkLogin({ path: "/login" });
     // 已登陆则获取笔记本列表
     this.getNotebooks();
   },
@@ -59,7 +58,7 @@ export default {
       "addNotebook",
       "updateNotebook",
       "deleteNotebook",
-      'checkLogin'
+      "checkLogin"
     ]),
     // 创建笔记本
     onCreate() {
@@ -98,7 +97,7 @@ export default {
         type: "warning"
       }).then(() => {
         // 处理删除笔记本事件
-        this.deleteNotebook({notebookId:notebook.id});
+        this.deleteNotebook({ notebookId: notebook.id });
       });
     }
   }

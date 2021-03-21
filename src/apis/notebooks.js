@@ -1,3 +1,8 @@
+/*
+ * @Date: 2021-03-20 19:40:08
+ * @LastEditors: KerbalHao
+ * @FilePath: \ever-note\src\apis\notebooks.js
+ */
 import request from "@/helpers/request";
 import { friendlyDate } from "@/helpers/util";
 
@@ -13,8 +18,10 @@ export default {
     return new Promise((resolve, reject) => {
       request(URL.GET)
         .then((res) => {
+          // 排序
           res.data = res.data.sort(() => -1);
           res.data.forEach((notebook) => {
+            // 格式化创建时间
             notebook.friendlyCreatedAt = friendlyDate(notebook.createdAt);
           });
           resolve(res);
@@ -37,6 +44,7 @@ export default {
     return new Promise((resolve, reject) => {
       request(URL.ADD, "POST", { title })
         .then((res) => {
+          // 格式化创建时间
           res.data.friendlyCreatedAt = friendlyDate(res.data.createdAt);
           res.data.updatedAtFriendly = friendlyDate(res.data.updatedAt);
           resolve(res);

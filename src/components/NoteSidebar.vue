@@ -5,7 +5,7 @@
 -->
 <template>
   <div class="note-sidebar">
-    <span class="btn add-note" @click="addNote">添加笔记</span>
+    <span class="btn add-note" @click="onAddNote">添加笔记</span>
     <el-dropdown
       class="notebook-title"
       @command="handleCommand"
@@ -41,66 +41,49 @@
 </template>
 
 <script>
-import Notebooks from "@/apis/notebooks";
-import Notes from "@/apis/notes";
-import Bus from "@/helpers/bus";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   props: ["curNote"],
   data() {
-    return {
-      notebooks: [],
-      notes: [],
-      curBook: {}
-    };
+    return {};
+  },
+  computed: {
+    ...mapGetters(["notebooks", "notes", "curBook"])
   },
   created() {
     // 进入获取当前所有笔记本
-    Notebooks.getAll()
-      .then((res) => {
-        this.notebooks = res.data;
-        // 设置当前笔记本
-        // 根据query 来判断进入笔记的方式，若有 notebook.id 则是点击具体笔记本进入
-        // 若无则默认显示第一个，若无笔记本则显示空
-        this.curBook = this.notebooks.find(
-          (notebook) =>
-            notebook.id == this.$route.query.notebookId ||
-            this.notebooks[0] ||
-            {}
-        );
-        // 确定当前笔记本（curBook）后请求其中的笔记
-        return Notes.getAll({ notebookId: this.curBook.id });
+    this.getNotebooks()
+      .then(() => {
+        // 设置当前笔记本ID
+        this.setCurBook({ curBookId: this.$route.query.notebookId });
+        // 获取当前笔记本的所有笔记
+        return this.getNotes({ notebookId: this.curBook.id });
       })
-      .then((res) => {
-        this.notes = res.data;
-        this.$emit("update:notes", this.notes);
-        Bus.$emit("update:notes", this.notes);
+      .then(() => {
+        // 设置当前笔记Id,getter 中会根据id 获取笔记
+        this.setCurNote({ curNoteId: this.$route.query.noteId });
       });
   },
   methods: {
+    ...mapMutations(["setCurBook", "setCurNote"]),
+    ...mapActions(["getNotebooks", "getNotes", "addNote"]),
+
     // 处理下拉框选中事件
     // notebookId 即 下拉框元素中的 Key
     handleCommand(notebookId) {
       if (notebookId == "trash") {
         return this.$router.push("/trash");
       }
-      this.curBook = this.notebooks.find(
-        (notebook) => notebook.id === notebookId
-      );
-
-      // 根据选中的笔记本id 请求笔记接口
-      Notes.getAll({ notebookId }).then((res) => {
-        this.notes = res.data;
-        this.$emit("update:notes", this.notes);
-      });
+      // 设置当前笔记id
+      this.setCurBook({ curBookId: notebookId });
+      // 根据当前笔记Id 获取笔记
+      this.getNotes({ notebookId });
     },
 
     // 添加笔记
-    addNote() {
-      Notes.addNote({ notebookId: this.curBook.id }).then((res) => {
-        console.log(res);
-        this.notes.unshift(res.data);
-      });
+    onAddNote() {
+      this.addNote({ notebookId: this.curBook.id });
     }
   }
 };

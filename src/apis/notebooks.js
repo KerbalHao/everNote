@@ -34,6 +34,14 @@ export default {
   },
 
   addNotebook({ title = "" } = { title: "" }) {
-    return request(URL.ADD, "POST", { title });
+    return new Promise((resolve, reject) => {
+      request(URL.ADD, "POST", { title })
+        .then((res) => {
+          res.data.friendlyCreatedAt = friendlyDate(res.data.createdAt);
+          res.data.updatedAtFriendly = friendlyDate(res.data.updatedAt);
+          resolve(res);
+        })
+        .catch((err) => reject(err));
+    });
   }
 };

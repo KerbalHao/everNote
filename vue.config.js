@@ -12,11 +12,12 @@ module.exports = {
     }
   },
   devServer: {
-    proxy: {
-      "/": {
-        target: "http://127.0.0.1:8081",
-        changeOrigin: true
-      }
-    }
+    // proxy: {
+    //   "/": {
+    //     target: "http://127.0.0.1:8081",
+    //     changeOrigin: true
+    //   }
+    // }
+    https: true
   }
 };

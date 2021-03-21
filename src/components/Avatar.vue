@@ -1,40 +1,28 @@
 <template>
-  <span :title="username">{{slug}}</span>
+  <span :title="username">{{ slug }}</span>
 </template>
 
 <script>
-  import Auth from '@/apis/auth'
-  import Bus from '@/helpers/bus'
+import { mapGetters, mapActions } from "vuex";
 
-  export default {
-    data() {
-      return {
-        username: '未登录'
-      }
-    },
+export default {
+  data() {
+    return {};
+  },
 
-    created() {
-      // 订阅 userInfo 事件，触发时修改用户名
-      // 此处订阅是为了可以实时改变
-      Bus.$on('userInfo', user => {
-        this.username = user.username
-      })
+  created() {
+    this.setUser();
+  },
 
-      // 获取用户名
-      Auth.getInfo()
-        .then(res => {
-          if(res.isLogin) {
-            this.username = res.data.username
-          }
-        })
-    },
-
-    computed: {
-      slug() {
-        return this.username.charAt(0)
-      }
-    }
+  computed: {
+    ...mapGetters(["username", "slug"])
+  },
+  methods: {
+    ...mapActions({
+      setUser: "checkLogin"
+    })
   }
+};
 </script>
 
 <style scoped>

@@ -7,8 +7,8 @@ import axios from "axios";
 import { Message } from "element-ui";
 
 let baseUrl = {
-  development: "/",
-  production: "http://note-server.hunger-valley.com"
+  development: "//note-server.hunger-valley.com",
+  production: "https://note-server.hunger-valley.com"
 };
 axios.defaults.headers.post["Content-Type"] =
   "application/x-www-form-urlencoded";

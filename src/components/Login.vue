@@ -53,8 +53,8 @@
 </template>
 
 <script>
-import Auth from "@/apis/auth";
-import Bus from "@/helpers/bus";
+  import {  mapActions } from 'vuex'
+
 
 export default {
   data() {
@@ -76,6 +76,10 @@ export default {
     };
   },
   methods: {
+    ...mapActions({
+        loginUser: 'login',
+        registerUser: 'register'
+        }),
     // 登陆注册切花
     showLogin() {
       this.isShowLogin = true;
@@ -100,14 +104,13 @@ export default {
       }
 
       // 调用注册接口
-      Auth.register({
+      this.registerUser({
         username: this.register.username,
         password: this.register.password
       })
         .then(() => {
           this.register.isError = false;
           this.register.notice = "";
-          Bus.$emit("userInfo", { username: this.login.username });
           this.$router.push({ path: "notebooks" });
         })
         .catch((data) => {
@@ -132,14 +135,13 @@ export default {
       }
 
       // 调用登录接口
-      Auth.login({
+      this.loginUser({
         username: this.login.username,
         password: this.login.password
       })
         .then(() => {
           this.login.isError = false;
           this.login.notice = "";
-          Bus.$emit("userInfo", { username: this.login.username });
           this.$router.push({ path: "/notebook" });
         })
         .catch((data) => {
@@ -180,7 +182,7 @@ export default {
   .main {
     flex: 1;
     background: #36bc64
-      url(//cloud.hunger-valley.com/17-12-13/38476998.jpg-middle) center center
+      url("../assets/note.jpg") center center
       no-repeat;
     background-size: contain;
   }

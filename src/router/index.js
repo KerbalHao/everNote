@@ -5,7 +5,7 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
+    path: "/notebook",
     component: () => import("@/components/NotebookList")
   },
   {
@@ -13,11 +13,11 @@ const routes = [
     component: () => import("@/components/Login")
   },
   {
-    path: "/note/:noteId",
+    path: "/note",
     component: () => import("@/components/NoteDetail")
   },
   {
-    path: "/trash/:noteId",
+    path: "/trash",
     component: () => import("@/components/TrashDetail")
   }
 ];

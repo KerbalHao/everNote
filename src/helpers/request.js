@@ -7,7 +7,7 @@ import axios from "axios";
 import { Message } from "element-ui";
 
 let baseUrl = {
-  development: "http://note-server.hunger-valley.com",
+  development: "/",
   production: "http://note-server.hunger-valley.com"
 };
 axios.defaults.headers.post["Content-Type"] =

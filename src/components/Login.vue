@@ -56,16 +56,6 @@
 import Auth from "@/apis/auth";
 import Bus from "@/helpers/bus";
 
-// Auth.getInfo()
-//   .then(data => {
-//     console.log(data)
-//   })
-
-// request('/auth')
-//  .then(data=>{
-//    console.log(data)
-//   })
-
 export default {
   data() {
     return {
@@ -86,6 +76,7 @@ export default {
     };
   },
   methods: {
+    // 登陆注册切花
     showLogin() {
       this.isShowLogin = true;
       this.isShowRegister = false;
@@ -94,7 +85,9 @@ export default {
       this.isShowLogin = false;
       this.isShowRegister = true;
     },
+    // 注册事件
     onRegister() {
+      // 账号密码检验
       if (!/^[\w\u4e00-\u9fa5]{3,15}$/.test(this.register.username)) {
         this.register.isError = true;
         this.register.notice = "用户名3~15个字符，仅限于字母数字下划线中文";
@@ -106,6 +99,7 @@ export default {
         return;
       }
 
+      // 调用注册接口
       Auth.register({
         username: this.register.username,
         password: this.register.password
@@ -121,7 +115,11 @@ export default {
           this.register.notice = data.msg;
         });
     },
+
+    //登录事件
     onLogin() {
+
+      // 参数校验
       if (!/^[\w\u4e00-\u9fa5]{3,15}$/.test(this.login.username)) {
         this.login.isError = true;
         this.login.notice = "用户名3~15个字符，仅限于字母数字下划线中文";
@@ -133,6 +131,7 @@ export default {
         return;
       }
 
+      // 调用登录接口
       Auth.login({
         username: this.login.username,
         password: this.login.password
@@ -141,7 +140,7 @@ export default {
           this.login.isError = false;
           this.login.notice = "";
           Bus.$emit("userInfo", { username: this.login.username });
-          this.$router.push({ path: "notebooks" });
+          this.$router.push({ path: "/notebook" });
         })
         .catch((data) => {
           this.login.isError = true;

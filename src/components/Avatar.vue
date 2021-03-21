@@ -14,10 +14,13 @@
     },
 
     created() {
+      // 订阅 userInfo 事件，触发时修改用户名
+      // 此处订阅是为了可以实时改变
       Bus.$on('userInfo', user => {
         this.username = user.username
       })
-      
+
+      // 获取用户名
       Auth.getInfo()
         .then(res => {
           if(res.isLogin) {
